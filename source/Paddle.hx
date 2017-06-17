@@ -6,12 +6,12 @@ import flixel.util.FlxColor;
 import flixel.input.FlxInput;
 import flixel.input.keyboard.FlxKey;
 
-typedef InputMap = { UP:FlxKey, DOWN:FlxKey }
+typedef InputMap = { UP:FlxKey, DOWN:FlxKey, ACTION:FlxKey }
 typedef SpawnPoint = { x:Float, y:Float }
 
 class Paddle extends FlxSprite
 {
-	public var speed(default, default):Float = 5;
+	public var speed(default, default):Float = 300;
 
 	private var _inputMap:InputMap;
 
@@ -20,7 +20,8 @@ class Paddle extends FlxSprite
 		super();
 		_inputMap = inputMap;
 		makeGraphic(10, 40, FlxColor.WHITE);
-		
+		immovable = true;
+
 		if (spawnPoint != null)
 		{
 			x = spawnPoint.x;
@@ -30,16 +31,26 @@ class Paddle extends FlxSprite
 
 	override public function update(elapsed:Float):Void
 	{
-		if (FlxG.keys.checkStatus(_inputMap.UP, FlxInputState.PRESSED))
+        super.update(elapsed);
+
+        var up = FlxG.keys.checkStatus(_inputMap.UP, FlxInputState.PRESSED);
+        var down = FlxG.keys.checkStatus(_inputMap.DOWN, FlxInputState.PRESSED);
+
+        if (up == down) 
+        {
+            velocity.y = 0;
+        }
+
+		if (up)
 		{
-			this.y -= speed;
+			velocity.y = -speed;
 		}
 
-		if (FlxG.keys.checkStatus(_inputMap.DOWN, FlxInputState.PRESSED))
+		if (down)
 		{
-			this.y += speed;
+			velocity.y = speed;
 		}
-
+        
 		if (this.y < 0) 
 		{
 			this.y = 0;
