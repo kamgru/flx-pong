@@ -32,8 +32,13 @@ class Paddle extends FlxSprite
 	override public function update(elapsed:Float):Void
 	{
         super.update(elapsed);
+		handleInput();
+		checkBounds();
+	}
 
-        var up = FlxG.keys.checkStatus(_inputMap.UP, FlxInputState.PRESSED);
+	private function handleInput():Void
+	{
+		var up = FlxG.keys.checkStatus(_inputMap.UP, FlxInputState.PRESSED);
         var down = FlxG.keys.checkStatus(_inputMap.DOWN, FlxInputState.PRESSED);
 
         if (up == down) 
@@ -50,7 +55,10 @@ class Paddle extends FlxSprite
 		{
 			velocity.y = speed;
 		}
-        
+	}
+
+	private function checkBounds():Void
+	{
 		if (this.y < 0) 
 		{
 			this.y = 0;
