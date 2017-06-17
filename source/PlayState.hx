@@ -13,6 +13,7 @@ class PlayState extends FlxState
 	private var _ball:Ball;
 	private var _walls:FlxSpriteGroup;
 	private var _paddles:FlxGroup;
+	private var _bounceCalculator:BallPaddleBounceCalculator = new BallPaddleBounceCalculator();
 
 	override public function create():Void
 	{
@@ -53,15 +54,7 @@ class PlayState extends FlxState
 
 		FlxG.collide(_ball, _walls);
 		FlxG.collide(_ball, _paddles, function(ball:Ball, paddle:Paddle){
-			
-			var relativeIntersectY = paddle.y + paddle.height / 2 - ball.y;
-			var normalizedIntersectY = relativeIntersectY / paddle.height / 2;
-			var bounceAngle = normalizedIntersectY * 75;
-
-			var velocity = new FlxVector(Math.cos(bounceAngle), -Math.sin(bounceAngle)).normalize();
-			ball.velocity.x = velocity.x * ball.speed;
-			ball.velocity.y = velocity.y * ball.speed;
-
+			ball.velocity = _bounceCalculator.calculateVelocity(ball, paddle);
 		});
 
 		if (FlxG.keys.justPressed.ESCAPE)
