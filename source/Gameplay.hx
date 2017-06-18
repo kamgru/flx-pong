@@ -13,15 +13,21 @@ class Gameplay extends FlxFSMState<FlxState>
 {
 	private var _ball:Ball;
 	private var _walls:FlxSpriteGroup;
-	private var _paddles:FlxGroup;
-	private var _bounceCalculator:BallPaddleBounceCalculator = new BallPaddleBounceCalculator();
+	private var _paddles:FlxSpriteGroup;
+	private var _bounceCalculator:BallPaddleBounceCalculator;
 
-	public function new(ball:Ball, paddles:FlxGroup, walls:FlxSpriteGroup)
+	public function new(ball:Ball, paddles:FlxSpriteGroup, walls:FlxSpriteGroup)
 	{
 		super();
 		_ball = ball;
 		_walls = walls;
 		_paddles = paddles;
+        _bounceCalculator = new BallPaddleBounceCalculator(
+            {
+                paddleHeight:_paddles.members[0].height, 
+                ballRadius:ball.height / 2, 
+                maxBounceAngle:75
+            });
 	}
 
 	override public function update(elapsed:Float, owner:FlxState, fsm:FlxFSM<FlxState>):Void

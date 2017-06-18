@@ -13,8 +13,7 @@ class PlayState extends FlxState
 {
 	private var _ball:Ball;
 	private var _walls:FlxSpriteGroup;
-	private var _paddles:FlxGroup;
-	private var _bounceCalculator:BallPaddleBounceCalculator = new BallPaddleBounceCalculator();
+	private var _paddles:FlxSpriteGroup;
 
 	private var _fsm:FlxFSM<FlxState>;
 
@@ -48,7 +47,7 @@ class PlayState extends FlxState
 
 	private function addPaddles():Void
 	{
-		_paddles = new FlxGroup();
+		_paddles = new FlxSpriteGroup();
 		_paddles.add(new Paddle({ UP: FlxKey.UP, DOWN: FlxKey.DOWN, ACTION:FlxKey.ENTER}, { x: 10, y: FlxG.height / 2 - 20}));
 		_paddles.add(new Paddle({ UP: FlxKey.W, DOWN: FlxKey.S, ACTION:FlxKey.X}, {x: (FlxG.width - 20), y: (FlxG.height / 2 - 20) }));
 		add(_paddles);
