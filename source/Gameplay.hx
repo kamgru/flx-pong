@@ -19,7 +19,7 @@ class Gameplay extends FlxFSMState<PlayState>
     override public function enter(owner:PlayState, fsm:FlxFSM<PlayState>):Void
     {
         _ball = owner.ball;
-		_walls = owner.walls;
+		_walls = owner.stage.walls;
 		_paddles = owner.paddles;
         if (_bounceCalculator == null)
         {

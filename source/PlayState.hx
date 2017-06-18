@@ -7,24 +7,27 @@ import flixel.input.*;
 import flixel.input.FlxInput;
 import flixel.math.*;
 import flixel.group.*;
+import flixel.group.FlxGroup;
 import flixel.addons.util.FlxFSM;
 
 class PlayState extends FlxState
 {
 	public var ball:Ball;
-	public var walls:FlxSpriteGroup;
 	public var paddles:FlxSpriteGroup;
 	public var servingPaddle:Paddle;
+	public var stage:Stage;
 
 	private var _fsm:FlxFSM<PlayState>;
-
+	
 	override public function create():Void
 	{
 		super.create();
 
-		addPaddles();
+		stage = new Stage(600, 400, (FlxG.width - 600) / 2, (FlxG.height - 400) / 2);
+		add(stage.walls);
+
+		addPaddles(stage);
 		addBall();
-		addWalls();
 
 		servingPaddle = cast(paddles.members[0], Paddle);
 
@@ -42,13 +45,40 @@ class PlayState extends FlxState
 		}
 
 		_fsm.update(elapsed);
+		checkPaddleBounds();
 	}
 
-	private function addPaddles():Void
+	private function checkPaddleBounds():Void
 	{
+		for (paddle in paddles)
+		{
+			if (paddle.y < stage.y + 1) 
+			{
+				paddle.y = stage.y + 1;
+			}
+
+			if (paddle.y > stage.y + stage.height - paddle.height)
+			{
+				paddle.y = stage.y + stage.height - paddle.height;
+			}
+		}
+	}
+
+	private function addPaddles(stage:Stage):Void
+	{
+		var startingSpots = stage.getPaddleStartingSpots(10, 40);
+
 		paddles = new FlxSpriteGroup();
-		paddles.add(new Paddle({ UP: FlxKey.UP, DOWN: FlxKey.DOWN, ACTION:FlxKey.ENTER}, { x: 10, y: FlxG.height / 2 - 20}));
-		paddles.add(new Paddle({ UP: FlxKey.W, DOWN: FlxKey.S, ACTION:FlxKey.X}, {x: (FlxG.width - 20), y: (FlxG.height / 2 - 20) }));
+
+		var leftPaddle = new Paddle({ UP: FlxKey.UP, DOWN: FlxKey.DOWN, ACTION:FlxKey.ENTER});
+		leftPaddle.setPosition(startingSpots[0].x, startingSpots[0].y);
+
+		var rightPaddle = new Paddle({ UP: FlxKey.W, DOWN: FlxKey.S, ACTION:FlxKey.X});
+		rightPaddle.setPosition(startingSpots[1].x, startingSpots[1].y);
+
+		paddles.add(leftPaddle);
+		paddles.add(rightPaddle);
+
 		add(paddles);
 	}
 
@@ -58,20 +88,5 @@ class PlayState extends FlxState
 		ball.x = 10;
 		ball.y = 10;
 		add(ball);
-	}
-
-	private function addWalls():Void
-	{
-		walls = new FlxSpriteGroup();
-		walls.add(new FlxSprite().makeGraphic(FlxG.width, 1, FlxColor.WHITE));
-		walls.add(new FlxSprite(0, FlxG.height - 1).makeGraphic(FlxG.width, 1, FlxColor.WHITE));
-		walls.add(new FlxSprite(0, 0).makeGraphic(1, FlxG.height, FlxColor.WHITE));
-		walls.add(new FlxSprite(FlxG.width - 1, 0).makeGraphic(1, FlxG.height, FlxColor.WHITE));
-		for (wall in walls)
-		{
-			wall.immovable = true;
-			wall.solid = true;
-		}
-		add(walls);
 	}
 }

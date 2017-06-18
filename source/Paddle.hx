@@ -16,18 +16,12 @@ class Paddle extends FlxSprite
 	private var _inputMap:InputMap;
 	private var _onActionCallback:Void->Void;
 
-	public function new(inputMap:InputMap, ?spawnPoint:SpawnPoint)
+	public function new(inputMap:InputMap)
 	{
 		super();
 		_inputMap = inputMap;
 		makeGraphic(10, 40, FlxColor.WHITE);
 		immovable = true;
-
-		if (spawnPoint != null)
-		{
-			x = spawnPoint.x;
-			y = spawnPoint.y;	
-		}
 	}
 
 	public function onAction(callback:Void->Void):Void
@@ -39,7 +33,6 @@ class Paddle extends FlxSprite
 	{
         super.update(elapsed);
 		handleInput();
-		checkBounds();
 	}
 
 	private function handleInput():Void
@@ -68,19 +61,6 @@ class Paddle extends FlxSprite
 			{
 				_onActionCallback();
 			}
-		}
-	}
-
-	private function checkBounds():Void
-	{
-		if (this.y < 0) 
-		{
-			this.y = 0;
-		}
-
-		if (this.y > FlxG.height - this.height)
-		{
-			this.y = FlxG.height - this.height;
 		}
 	}
 }
