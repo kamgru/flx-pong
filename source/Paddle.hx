@@ -14,6 +14,7 @@ class Paddle extends FlxSprite
 	public var speed(default, default):Float = 300;
 
 	private var _inputMap:InputMap;
+	private var _onActionCallback:Void->Void;
 
 	public function new(inputMap:InputMap, ?spawnPoint:SpawnPoint)
 	{
@@ -27,6 +28,11 @@ class Paddle extends FlxSprite
 			x = spawnPoint.x;
 			y = spawnPoint.y;	
 		}
+	}
+
+	public function onAction(callback:Void->Void):Void
+	{
+		_onActionCallback = callback;
 	}
 
 	override public function update(elapsed:Float):Void
@@ -54,6 +60,14 @@ class Paddle extends FlxSprite
 		if (down)
 		{
 			velocity.y = speed;
+		}
+
+		if (FlxG.keys.checkStatus(_inputMap.ACTION, FlxInputState.JUST_PRESSED))
+		{
+			if (_onActionCallback != null)
+			{
+				_onActionCallback();
+			}
 		}
 	}
 

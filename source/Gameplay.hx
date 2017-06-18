@@ -9,28 +9,30 @@ import flixel.math.*;
 import flixel.group.*;
 import flixel.addons.util.FlxFSM;
 
-class Gameplay extends FlxFSMState<FlxState>
+class Gameplay extends FlxFSMState<PlayState>
 {
 	private var _ball:Ball;
 	private var _walls:FlxSpriteGroup;
 	private var _paddles:FlxSpriteGroup;
 	private var _bounceCalculator:BallPaddleBounceCalculator;
 
-	public function new(ball:Ball, paddles:FlxSpriteGroup, walls:FlxSpriteGroup)
-	{
-		super();
-		_ball = ball;
-		_walls = walls;
-		_paddles = paddles;
-        _bounceCalculator = new BallPaddleBounceCalculator(
+    override public function enter(owner:PlayState, fsm:FlxFSM<PlayState>):Void
+    {
+        _ball = owner.ball;
+		_walls = owner.walls;
+		_paddles = owner.paddles;
+        if (_bounceCalculator == null)
+        {
+            _bounceCalculator = new BallPaddleBounceCalculator(
             {
                 paddleHeight:_paddles.members[0].height, 
-                ballRadius:ball.height / 2, 
+                ballRadius:_ball.height / 2, 
                 maxBounceAngle:75
-            });
-	}
+            });    
+        }
+    }
 
-	override public function update(elapsed:Float, owner:FlxState, fsm:FlxFSM<FlxState>):Void
+	override public function update(elapsed:Float, owner:PlayState, fsm:FlxFSM<PlayState>):Void
 	{
 		processCollisions();
 	}
