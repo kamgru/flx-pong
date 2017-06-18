@@ -64,10 +64,17 @@ class Gameplay extends FlxFSMState<PlayState>
 
     private function processBallGoalCollision(ball:Ball, goal:GoalTrigger):Void
     {
-        ball.velocity.set(0, 0);
         _owner.scoreInfo.addScore(goal.player);
         var scores = _owner.scoreInfo.getScore();
         _owner.gui.updateScore(scores[0], scores[1]);
+        
+        var servingPaddle = Lambda.find(_owner.paddles.members, function(paddle)
+        {
+            return cast(paddle, Paddle).player != _owner.servingPaddle.player;
+        });
+
+        _owner.servingPaddle = cast(servingPaddle, Paddle);
+    
         _shouldTransition = true;
     }
 }
