@@ -9,7 +9,7 @@ class BallPaddleBounceCalculator
 
     public function calculateVelocity(ball:Ball, paddle:Paddle):FlxPoint
     {
-        var relativeIntersectY = paddle.y + paddle.height / 2 - ball.y;
+        var relativeIntersectY = paddle.y - paddle.height / 2 + ball.y;
         var normalizedIntersectY = relativeIntersectY / paddle.height / 2;
         var bounceAngle = normalizedIntersectY * 75;
 

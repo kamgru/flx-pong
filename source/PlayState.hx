@@ -7,6 +7,7 @@ import flixel.input.*;
 import flixel.input.FlxInput;
 import flixel.math.*;
 import flixel.group.*;
+import flixel.addons.util.FlxFSM;
 
 class PlayState extends FlxState
 {
@@ -15,18 +16,22 @@ class PlayState extends FlxState
 	private var _paddles:FlxGroup;
 	private var _bounceCalculator:BallPaddleBounceCalculator = new BallPaddleBounceCalculator();
 
+	private var _fsm:FlxFSM<FlxState>;
+
 	override public function create():Void
 	{
 		super.create();
+
 		addPaddles();
 		addBall();
 		addWalls();
+
+		_fsm = new FlxFSM<FlxState>(this, new Gameplay(_ball, _paddles, _walls));
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		processCollisions();
 
 		if (FlxG.keys.justPressed.SPACE)
 		{
@@ -37,16 +42,8 @@ class PlayState extends FlxState
 		{
 			FlxG.resetState();
 		}
-	}
 
-	private function processCollisions():Void
-	{
-		FlxG.collide(_ball, _walls);
-		FlxG.collide(_ball, _paddles, function(ball:Ball, paddle:Paddle)
-		{
-			var velocity = _bounceCalculator.calculateVelocity(ball, paddle);
-			ball.velocity.set(velocity.x, velocity.y);
-		});
+		_fsm.update(elapsed);
 	}
 
 	private function addPaddles():Void
