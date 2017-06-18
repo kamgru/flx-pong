@@ -53,8 +53,8 @@ class Stage
     private function createGoals():FlxTypedGroup<GoalTrigger>
     {
         var goals = new FlxTypedGroup<GoalTrigger>();
-        goals.add(new GoalTrigger(1, x, y, 1, height));
-        goals.add(new GoalTrigger(2, x + width - 1, y,1, height));
+        goals.add(new GoalTrigger(2, x, y, 1, height));
+        goals.add(new GoalTrigger(1, x + width - 1, y,1, height));
         return goals;
     }
 

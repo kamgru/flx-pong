@@ -9,8 +9,7 @@ import flixel.math.*;
 import flixel.group.*;
 import flixel.group.FlxGroup;
 import flixel.addons.util.FlxFSM;
-
-typedef GoalInfo = { player:Int };
+import flixel.text.FlxText;
 
 class PlayState extends FlxState
 {
@@ -18,8 +17,8 @@ class PlayState extends FlxState
 	public var paddles:FlxSpriteGroup;
 	public var servingPaddle:Paddle;
 	public var stage:Stage;
-
-	public var goalInfo:GoalInfo;
+	public var gui:Gui;
+	public var scoreInfo:ScoreInfo = new ScoreInfo();
 
 	private var _fsm:FlxFSM<PlayState>;
 	
@@ -39,6 +38,9 @@ class PlayState extends FlxState
 		_fsm = new FlxFSM<PlayState>(this, new Serve());
 		_fsm.transitions.add(Serve, Gameplay, Serve.served);
 		_fsm.transitions.add(Gameplay, Serve, Gameplay.shouldTransition);
+
+		gui = new Gui(stage);
+		add(gui);
 	}
 
 	override public function update(elapsed:Float):Void
