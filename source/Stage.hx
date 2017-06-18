@@ -17,6 +17,7 @@ class Stage
     public var x:Float;
     public var y:Float;
     public var walls:FlxSpriteGroup;
+    public var goals:FlxTypedGroup<GoalTrigger>;
 	
 	public function new(width:Int, height:Int, x:Float, y:Float)
 	{
@@ -25,6 +26,7 @@ class Stage
         this.x = x;
         this.y = y;
 		walls = createWalls();
+        goals = createGoals();
 	}
 
 	public function getStageSize():FlxPoint
@@ -44,10 +46,17 @@ class Stage
         var walls = new FlxSpriteGroup();
 		walls.add(createWall(x, y, width, 1));
 		walls.add(createWall(x, y + height - 1, width, 1));
-		walls.add(createWall(x, y, 1, height));
-		walls.add(createWall(x + width - 1, y, 1, height));
+		
         return walls;
 	}
+
+    private function createGoals():FlxTypedGroup<GoalTrigger>
+    {
+        var goals = new FlxTypedGroup<GoalTrigger>();
+        goals.add(new GoalTrigger(1, x, y, 1, height));
+        goals.add(new GoalTrigger(2, x + width - 1, y,1, height));
+        return goals;
+    }
 
 	private function createWall(x:Float, y:Float, width:Int, height:Int):FlxSprite
 	{

@@ -25,6 +25,11 @@ class Serve extends FlxFSMState<PlayState>
         _servingPaddle.onAction(onServe);
     }
 
+    override public function exit(owner:PlayState):Void
+    {
+        _served = false;
+    }
+
     override public function update(elapsed:Float, owner:PlayState, fsm:FlxFSM<PlayState>):Void
 	{
         _ball.x = _servingPaddle.x + _servingPaddle.width + 1;

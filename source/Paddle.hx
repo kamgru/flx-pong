@@ -12,16 +12,18 @@ typedef SpawnPoint = { x:Float, y:Float }
 class Paddle extends FlxSprite
 {
 	public var speed(default, default):Float = 300;
+	public var player(default, null):Int;
 
 	private var _inputMap:InputMap;
 	private var _onActionCallback:Void->Void;
 
-	public function new(inputMap:InputMap)
+	public function new(player:Int, inputMap:InputMap)
 	{
 		super();
 		_inputMap = inputMap;
 		makeGraphic(10, 40, FlxColor.WHITE);
 		immovable = true;
+		this.player = player;
 	}
 
 	public function onAction(callback:Void->Void):Void

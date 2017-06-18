@@ -10,12 +10,16 @@ import flixel.group.*;
 import flixel.group.FlxGroup;
 import flixel.addons.util.FlxFSM;
 
+typedef GoalInfo = { player:Int };
+
 class PlayState extends FlxState
 {
 	public var ball:Ball;
 	public var paddles:FlxSpriteGroup;
 	public var servingPaddle:Paddle;
 	public var stage:Stage;
+
+	public var goalInfo:GoalInfo;
 
 	private var _fsm:FlxFSM<PlayState>;
 	
@@ -25,6 +29,7 @@ class PlayState extends FlxState
 
 		stage = new Stage(600, 400, (FlxG.width - 600) / 2, (FlxG.height - 400) / 2);
 		add(stage.walls);
+		add(stage.goals);
 
 		addPaddles(stage);
 		addBall();
@@ -33,6 +38,7 @@ class PlayState extends FlxState
 
 		_fsm = new FlxFSM<PlayState>(this, new Serve());
 		_fsm.transitions.add(Serve, Gameplay, Serve.served);
+		_fsm.transitions.add(Gameplay, Serve, Gameplay.shouldTransition);
 	}
 
 	override public function update(elapsed:Float):Void
@@ -70,10 +76,10 @@ class PlayState extends FlxState
 
 		paddles = new FlxSpriteGroup();
 
-		var leftPaddle = new Paddle({ UP: FlxKey.UP, DOWN: FlxKey.DOWN, ACTION:FlxKey.ENTER});
+		var leftPaddle = new Paddle(1, { UP: FlxKey.UP, DOWN: FlxKey.DOWN, ACTION:FlxKey.ENTER});
 		leftPaddle.setPosition(startingSpots[0].x, startingSpots[0].y);
 
-		var rightPaddle = new Paddle({ UP: FlxKey.W, DOWN: FlxKey.S, ACTION:FlxKey.X});
+		var rightPaddle = new Paddle(2, { UP: FlxKey.W, DOWN: FlxKey.S, ACTION:FlxKey.X});
 		rightPaddle.setPosition(startingSpots[1].x, startingSpots[1].y);
 
 		paddles.add(leftPaddle);
