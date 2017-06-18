@@ -64,6 +64,8 @@ class Gameplay extends FlxFSMState<PlayState>
 
     private function processBallGoalCollision(ball:Ball, goal:GoalTrigger):Void
     {
+        ball.velocity.set(0,0);
+        ball.visible = false;
         _owner.scoreInfo.addScore(goal.player);
         var scores = _owner.scoreInfo.getScore();
         _owner.gui.updateScore(scores[0], scores[1]);
